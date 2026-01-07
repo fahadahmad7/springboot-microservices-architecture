@@ -1,4 +1,4 @@
-# Microservices-example
+# Microservices
 Example of a microservices using Spring Cloud, Spring Boot, Docker, Mysql, MongoDB, RabbitMQ, Keycloak, Spring WebFlux,  Resilience4J
 
 # About the project
