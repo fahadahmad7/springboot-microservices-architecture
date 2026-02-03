@@ -2,33 +2,9 @@ spring:
   application:
     name: inventory-service
 
-  # Disable Config Server completely
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
   cloud:
     config:
-      enabled: false
-  # Optional config import (quoted!)
-  config:
-    import: "optional:configserver:"
-
-# Server
-server:
-  port: 8083
-
-data:
-  mongodb:
-    uri: mongodb://localhost:27017/inventory_db
-
-# Eureka client
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-
-
-# Logging
-logging:
-  level:
-    root: INFO
-    org.springframework.web: DEBUG
+      enabled: true
