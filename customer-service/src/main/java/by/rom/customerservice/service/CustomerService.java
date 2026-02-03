@@ -6,6 +6,8 @@ import by.rom.customerservice.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
@@ -18,5 +20,16 @@ public class CustomerService {
                 .name(customerDto.getName())
                 .phoneNumber(customerDto.getPhoneNumber())
                 .build());
+    }
+
+    public CustomerDto getCustomerById(Long id){
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        return CustomerDto.builder()
+                .name(customer.getName())
+                .email(customer.getEmail())
+                .phoneNumber(customer.getPhoneNumber())
+                .build();
     }
 }

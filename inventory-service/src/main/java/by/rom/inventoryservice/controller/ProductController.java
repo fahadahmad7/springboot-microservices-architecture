@@ -1,5 +1,4 @@
 package by.rom.inventoryservice.controller;
-
 import by.rom.inventoryservice.dto.InventoryResponse;
 import by.rom.inventoryservice.dto.ProductRequest;
 import by.rom.inventoryservice.dto.ProductResponse;
@@ -20,7 +19,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productRequest));
+            return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productRequest));
     }
 
     @GetMapping

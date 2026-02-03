@@ -33,6 +33,14 @@ public class OrderService {
     public Order createOrder(OrderDto orderDto) {
         Customer customer = findCustomer(orderDto);
 
+        InventoryResponse response = findProduct(orderDto.getNameProduct());
+        if (!response.isInStock()) {
+            throw new IllegalArgumentException("Product isn't in stock, please try again later");
+        }
+        if (orderDto.getCountOfProduct()>response.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient stock, please try again later");
+        }
+
         log.info("creating order: {}", orderDto);
 
         Order order = Order.builder()
@@ -42,25 +50,13 @@ public class OrderService {
                 .countOfProduct(orderDto.getCountOfProduct())
                 .build();
 
-        InventoryResponse response = findProduct(order.getNameProduct());
-
-        boolean hasProduct = response.isInStock();
-
         log.info("saving order to the DB: {}", orderDto);
 
         Order savedOrder;
-
-        if (!hasProduct){
-            order.setPrice(response.getPrice());
-            savedOrder  = orderRepository.save(order);
-            log.info("saved order {}", savedOrder);
-        }
-        else {
-            throw new IllegalArgumentException("Product isn't in stock, please try again later");
-        }
-
+        order.setPrice(response.getPrice());
+        savedOrder  = orderRepository.save(order);
+        log.info("saved order {}", savedOrder);
         sendEmail(savedOrder, customer);
-
         return savedOrder;
     }
 
@@ -75,9 +71,7 @@ public class OrderService {
 
     private InventoryResponse findProduct(String nameProduct) {
         InventoryResponse result = inventoryClient.sendRequest(nameProduct);
-
         log.info("result from inventory service: {}", result);
-
         return result;
     }
 

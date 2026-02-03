@@ -50,6 +50,7 @@ public class ProductService {
                 .map(pr -> InventoryResponse.builder()
                         .nameProduct(pr.getName())
                         .price(pr.getPrice())
+                        .quantity(pr.getQuantity())
                         .isInStock(pr.getQuantity() > 0)
                         .build())
                 .orElseThrow(() -> {
@@ -63,6 +64,7 @@ public class ProductService {
                 .description(product.getDescription())
                 .name(product.getName())
                 .price(product.getPrice())
+                .isInStock(product.getQuantity()>0)
                 .build();
     }
 }

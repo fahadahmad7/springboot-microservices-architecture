@@ -13,10 +13,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Data
 public class Product {
-    @Id
-    private String id;
-    private String name;
-    private String description;
-    private int price;
-    private int quantity;
+        @Id
+        private String id;
+        private String name;
+        private String description;
+        private int price;
+        @Builder.Default
+        private int quantity=10;
 }

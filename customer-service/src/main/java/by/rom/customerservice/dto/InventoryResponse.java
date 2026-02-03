@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class InventoryResponse {
     private String nameProduct;
     private int price;
+    private int quantity;
     private boolean isInStock;
 }
