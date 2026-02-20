@@ -14,18 +14,16 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // it is used in session based authentication it requires csrf token if enabled
 
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/auth/**", "/eureka/**").permitAll()
                         .anyExchange().authenticated()
                 )
 
-                // ✅ NEW & CORRECT way (Spring Security 6.2+)
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwt -> {})
                 )
-
                 .build();
     }
 }

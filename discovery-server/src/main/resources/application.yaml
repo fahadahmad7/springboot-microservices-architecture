@@ -7,6 +7,3 @@ server:
 spring:
   application:
     name: discovery-server
-#  cloud:
-#    config:
-#      uri: http://localhost:8888

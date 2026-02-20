@@ -1,12 +1,15 @@
 server:
   port: 8180
 
+jwt:
+  secret: a-string-secret-at-least-256-bits-long
+
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          secret-key: a-string-secret-at-least-256-bits-long
+          secret-key: ${jwt.secret}
 
   cloud:
     gateway:
@@ -54,6 +57,12 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info
 
 logging:
   level:
