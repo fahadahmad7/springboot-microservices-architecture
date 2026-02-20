@@ -11,7 +11,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-@RefreshScope
+//@RefreshScope
 public class JwtUtil {
 
     @Value("${jwt.secret}")
