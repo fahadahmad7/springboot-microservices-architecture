@@ -194,35 +194,4 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, status);
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-
-        List<String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(FieldError::getDefaultMessage)
-                .collect(Collectors.toList());
-
-        body.put("errors", errors);
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleOtherExceptions(Exception ex, ServerWebExchange exchange) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(ex.getMessage())
-                .httpStatus(status)
-                .path(exchange.getRequest().getPath().value())
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        return new ResponseEntity<>(errorResponse, status);
-    }
 }
