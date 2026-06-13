@@ -14,7 +14,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable) // it is used in session based authentication it requires csrf token if enabled
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // Cross Site Request Forgery it is used in session based authentication it requires csrf token if enabled
 
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/auth/**", "/eureka/**").permitAll()

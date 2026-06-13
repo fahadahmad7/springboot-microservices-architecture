@@ -1,21 +1,22 @@
 package by.rom.customerservice.service;
 
-import by.rom.customerservice.client.InventoryClient;
 import by.rom.customerservice.config.MessageConfig;
 import by.rom.customerservice.dto.CustomerDto;
 import by.rom.customerservice.dto.EmailDto;
 import by.rom.customerservice.dto.InventoryResponse;
 import by.rom.customerservice.dto.OrderDto;
-import by.rom.customerservice.exception.NotFoundException;
+import by.rom.customerservice.exception.*;
 import by.rom.customerservice.model.Customer;
 import by.rom.customerservice.model.Order;
 import by.rom.customerservice.repository.CustomerRepository;
 import by.rom.customerservice.repository.OrderRepository;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import by.rom.customerservice.client.InventoryClient;
 
 import java.util.List;
 
@@ -27,18 +28,18 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final InventoryClient inventoryClient;
+    private final InventoryService inventoryService;
 
     @Transactional
     public Order createOrder(OrderDto orderDto) {
         Customer customer = findCustomer(orderDto);
 
-        InventoryResponse response = findProduct(orderDto.getNameProduct());
+        InventoryResponse response = inventoryService.findProduct(orderDto.getNameProduct());
         if (!response.isInStock()) {
-            throw new IllegalArgumentException("Product isn't in stock, please try again later");
+            throw new ProductOutOfStockException("Product isn't in stock, please try again later");
         }
         if (orderDto.getCountOfProduct()>response.getQuantity()) {
-            throw new IllegalArgumentException("Insufficient stock, please try again later");
+            throw new InsufficientStockException("Insufficient stock, please try again later");
         }
 
         log.info("creating order: {}", orderDto);
@@ -63,21 +64,15 @@ public class OrderService {
     public List<Order> getOrders(CustomerDto customerDto) {
         List<Order> list = orderRepository.findOrderByCustomerNumberAndEmail(customerDto.getPhoneNumber());
         if (list.isEmpty()){
-            throw new NotFoundException("Customer doesn't have any orders, try again.");
+            throw new NoOrdersFoundForCustomerException("Customer doesn't have any orders, try again.");
         }
         else
             return list;
     }
 
-    private InventoryResponse findProduct(String nameProduct) {
-        InventoryResponse result = inventoryClient.sendRequest(nameProduct);
-        log.info("result from inventory service: {}", result);
-        return result;
-    }
-
     private Customer findCustomer(OrderDto orderDto) {
         return customerRepository.findById(orderDto.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("customer not found with id: " + orderDto.getCustomerId()));
+                .orElseThrow(() -> new CustomerNotFoundException("customer not found with id: " + orderDto.getCustomerId()));
     }
 
     private void sendEmail(Order savedOrder, Customer customer) {

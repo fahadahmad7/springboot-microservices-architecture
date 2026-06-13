@@ -11,9 +11,13 @@ import java.time.LocalDateTime;
 @Builder
 public class ErrorResponse {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime timestamp;
+
     private final String message;
+
     private final String path;
+
     private final HttpStatus httpStatus;
 }

@@ -1,25 +1,13 @@
 package by.rom.customerservice.client;
+
 import by.rom.customerservice.dto.EmailDto;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@Component
-@RequiredArgsConstructor
-@Slf4j
-public class NotificationClient {
+@FeignClient(name = "NOTIFICATION-SERVICE")
+public interface NotificationClient {
 
-    private final RestTemplate restTemplate;
-
-    public void sendEmail(EmailDto emailDto) {
-
-        log.info("sending email to {} with text: {}",
-                emailDto.getEmail(), emailDto.getBody());
-
-        String url = "http://notification-service/api/notification/email";
-
-        restTemplate.postForEntity(url, emailDto, Void.class);
-    }
+    @PostMapping("/api/notification/email")
+    void sendEmail(@RequestBody EmailDto emailDto);
 }
-
