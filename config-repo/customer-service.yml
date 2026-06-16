@@ -20,6 +20,12 @@ spring:
         default_schema: MICRO_USER
     database-platform: org.hibernate.dialect.OracleDialect
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -64,3 +70,5 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
+
+
