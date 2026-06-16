@@ -1,6 +1,7 @@
 package by.rom.notificationservice.controller;
 
 import by.rom.notificationservice.dto.NotificationDto;
+import by.rom.notificationservice.dto.OrderCreatedEvent;
 import by.rom.notificationservice.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @PostMapping("/email")
-    public ResponseEntity<Void> email(@RequestBody NotificationDto notificationDto){
-        notificationService.email(notificationDto);
+    public ResponseEntity<Void> email(@RequestBody OrderCreatedEvent orderCreatedEvent){
+        notificationService.sendOrderCreatedEmail(orderCreatedEvent);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,10 +1,7 @@
 package by.rom.customerservice.service;
 
 import by.rom.customerservice.config.MessageConfig;
-import by.rom.customerservice.dto.CustomerDto;
-import by.rom.customerservice.dto.EmailDto;
-import by.rom.customerservice.dto.InventoryResponse;
-import by.rom.customerservice.dto.OrderDto;
+import by.rom.customerservice.dto.*;
 import by.rom.customerservice.exception.*;
 import by.rom.customerservice.model.Customer;
 import by.rom.customerservice.model.Order;
@@ -14,6 +11,7 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import by.rom.customerservice.client.InventoryClient;
@@ -27,7 +25,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
-    private final RabbitTemplate rabbitTemplate;
+    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
     private final InventoryService inventoryService;
 
     @Transactional
@@ -76,15 +74,20 @@ public class OrderService {
     }
 
     private void sendEmail(Order savedOrder, Customer customer) {
-        EmailDto emailDto = EmailDto.builder()
-                .email(customer.getEmail())
-                .nameOfProduct(savedOrder.getNameProduct())
-                .price(savedOrder.getPrice())
-                .body(String.format("Thanks %s for your order.", customer.getName()))
-                .build();
 
-        log.info("sending email {}" , emailDto);
+        OrderCreatedEvent event =
+                new OrderCreatedEvent(
+                        savedOrder.getId(),
+                        customer.getName(),
+                        customer.getEmail(),
+                        savedOrder.getNameProduct(),
+                        savedOrder.getPrice(),
+                        savedOrder.getCountOfProduct()
+                );
 
-        rabbitTemplate.convertAndSend(MessageConfig.EXCHANGE, MessageConfig.ROUTING_KEY, emailDto);
+        kafkaTemplate.send(
+                "order-created-topic",
+                event);
+        log.info("Event published {}", event);
     }
 }
