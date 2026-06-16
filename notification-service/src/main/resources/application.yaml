@@ -2,16 +2,10 @@ spring:
   application:
     name: notification-service
 
-  # Disable Config Server completely
+
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
   cloud:
     config:
-      enabled: false
-  # Optional config import (quoted!)
-  config:
-    import: "optional:configserver:"
-
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+      enabled: true
