@@ -1,7 +1,6 @@
 package by.rom.notificationservice.controller;
 
-import by.rom.notificationservice.dto.NotificationDto;
-import by.rom.notificationservice.dto.OrderCreatedEvent;
+import by.rom.OrderCreatedEvent;
 import by.rom.notificationservice.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

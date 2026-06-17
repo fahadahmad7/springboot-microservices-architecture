@@ -20,6 +20,7 @@
         <module>customer-service</module>
         <module>inventory-service</module>
         <module>notification-service</module>
+        <module>common</module>
     </modules>
 
     <properties>

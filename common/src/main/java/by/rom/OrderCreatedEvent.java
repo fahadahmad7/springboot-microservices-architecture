@@ -1,6 +1,4 @@
-package by.rom.customerservice.dto;
-
-import java.math.BigDecimal;
+package by.rom;
 
 public record OrderCreatedEvent(
 

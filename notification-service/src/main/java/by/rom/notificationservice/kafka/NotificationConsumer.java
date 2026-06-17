@@ -1,6 +1,6 @@
 package by.rom.notificationservice.kafka;
 
-import by.rom.notificationservice.dto.OrderCreatedEvent;
+import by.rom.OrderCreatedEvent;
 import by.rom.notificationservice.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

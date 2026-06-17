@@ -1,20 +1,17 @@
 package by.rom.customerservice.service;
 
-import by.rom.customerservice.config.MessageConfig;
+import by.rom.OrderCreatedEvent;
 import by.rom.customerservice.dto.*;
 import by.rom.customerservice.exception.*;
 import by.rom.customerservice.model.Customer;
 import by.rom.customerservice.model.Order;
 import by.rom.customerservice.repository.CustomerRepository;
 import by.rom.customerservice.repository.OrderRepository;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import by.rom.customerservice.client.InventoryClient;
 
 import java.util.List;
 
