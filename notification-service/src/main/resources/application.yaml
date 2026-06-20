@@ -1,9 +1,9 @@
 server:
   port: 8084
+
 spring:
   application:
     name: notification-service
-
 
   config:
     import: "optional:configserver:http://host.docker.internal:8888"
@@ -11,9 +11,8 @@ spring:
   cloud:
     config:
       enabled: true
-  kafka:
-    bootstrap-servers: host.docker.internal:9092
 
+  kafka:
     consumer:
       group-id: notification-group
       auto-offset-reset: earliest
@@ -22,3 +21,10 @@ spring:
 
       properties:
         spring.json.trusted.packages: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://host.docker.internal:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
