@@ -4,13 +4,13 @@ spring:
 
 
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: "optional:configserver:http://host.docker.internal:8888"
 
   cloud:
     config:
       enabled: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: host.docker.internal:9092
 
     consumer:
       group-id: notification-group

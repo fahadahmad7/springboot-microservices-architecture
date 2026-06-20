@@ -1,7 +1,7 @@
-FROM openjdk:11.0.13
+FROM eclipse-temurin:22-jre
 
-ARG JAR_FILE=target/*.jar
+WORKDIR /app
 
-COPY ${JAR_FILE} app.jar
+COPY target/*.jar app.jar
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
